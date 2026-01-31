@@ -220,6 +220,40 @@ class PhoneticEngine {
                 'stressPattern' => 'final',
                 'vowelHarmony' => true,
                 'harmonyType' => 'front-back'
+            ],
+            // Finnish (Uralic/Finno-Ugric) - distinct from Germanic Nordic languages
+            // Features: strict vowel harmony, no initial consonant clusters, geminate consonants
+            'finnish' => [
+                'syllables' => [
+                    'initial' => [['CV', 55], ['CVC', 30], ['V', 15]],  // Finnish words rarely start with clusters
+                    'medial' => [['CV', 45], ['CVC', 40], ['V', 15]],
+                    'final' => [['CV', 40], ['CVC', 35], ['V', 25]]
+                ],
+                'length' => [2, 4],  // Finnish names tend to be longer due to agglutinative nature
+                'onsets' => [
+                    // Finnish rarely uses initial consonant clusters
+                    'initial' => $this->weighted(['h', 'k', 'p', 't', 'v', 'j', 's', 'l', 'm', 'n', 'r'],
+                        [4, 4, 3, 3, 3, 3, 3, 2, 3, 2, 2]),
+                    'medial' => $this->weighted(['k', 'p', 't', 'v', 'l', 'n', 'm', 'r', 's', 'kk', 'pp', 'tt', 'll', 'nn', 'mm', 'ss'],
+                        [3, 2, 3, 2, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2])  // Geminate consonants common
+                ],
+                'nuclei' => [
+                    // Finnish vowel harmony: front vowels (ä, ö, y) vs back vowels (a, o, u)
+                    // e and i are neutral
+                    'stressed' => $this->weighted(['a', 'e', 'i', 'o', 'u', 'ä', 'ö', 'y', 'aa', 'ee', 'ii', 'oo', 'uu', 'ää'],
+                        [8, 8, 8, 6, 6, 4, 3, 3, 3, 2, 3, 2, 2, 2]),
+                    'unstressed' => $this->weighted(['a', 'e', 'i', 'o', 'u', 'ä', 'ö'],
+                        [7, 8, 8, 5, 5, 4, 3])
+                ],
+                'codas' => [
+                    'medial' => $this->weighted(['n', 'l', 's', 'r', 't', 'k'],
+                        [4, 3, 3, 3, 2, 2]),
+                    'final' => $this->weighted(['n', 'nen', 'la', 'lä', 's', 'ri', 'kka', 'kko', 'i', 'a'],
+                        [4, 4, 3, 2, 2, 2, 2, 2, 3, 4])
+                ],
+                'stressPattern' => 'initial',  // Finnish stress always on first syllable
+                'vowelHarmony' => true,
+                'harmonyType' => 'finnish-front-back'  // Special Finnish vowel harmony rules
             ]
         ];
     }
@@ -322,6 +356,21 @@ class PhoneticEngine {
                     'finalVowels' => ['ia', 'iss', 'ara', 'ith'],
                     'preferredEndings' => ['ia', 'iss', 'ara', 'ith', 'essa', 'yss'],
                     'lengthMod' => 1
+                ]
+            ],
+            // Finnish (Uralic) - distinct endings from Nordic cultures
+            'finnish' => [
+                'male' => [
+                    'finalCodas' => ['n', 's', 'ri', 'kka', 'kko'],
+                    'finalVowels' => ['i', 'o', 'a'],
+                    'preferredEndings' => ['i', 'o', 'ri', 'mo', 'kka', 'ari', 'nen'],
+                    'lengthMod' => 0
+                ],
+                'female' => [
+                    'finalCodas' => ['n', 'kka'],
+                    'finalVowels' => ['a', 'iina', 'ja', 'liina'],
+                    'preferredEndings' => ['a', 'iina', 'ja', 'liina', 'tta', 'kka', 'nen'],
+                    'lengthMod' => 0
                 ]
             ]
         ];

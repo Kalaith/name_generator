@@ -125,26 +125,42 @@ class DialectProfiles {
                 'prefixes' => [],
                 'lengthMod' => 0
             ],
+            // Icelandic uses patronymic surnames (father's first name + son/dottir)
+            // Forename endings: male: -ur, -ir, -orn, -ar (e.g., Ragnar, Gunnar, Björn)
+            //                  female: -a, -ey, -dis, -hildur (e.g., Freyja, Sigridis)
+            // These forename endings are handled by codaMods and preferredEndings in PhoneticEngine
+            // The maleEndings/femaleEndings here are for surnames (patronymics ONLY)
             'icelandic' => [
                 'baseCulture' => 'nordic',
                 'onsetMods' => ['hv' => 2, 'þ' => 2, 'ð' => 1],
                 'nucleiMods' => ['á' => 2, 'í' => 2, 'ú' => 2, 'ey' => 2],
-                'codaMods' => ['ur' => 3],
-                'maleEndings' => ['ur', 'son', 'sson', 'ir', 'orn'],
-                'femaleEndings' => ['dottir', 'a', 'ey', 'dis', 'hildur'],
+                'codaMods' => ['ur' => 3, 'ir' => 2, 'ar' => 2],  // Forename codas
+                // Patronymic surname endings ONLY - all Icelanders use father's name + son/dottir
+                'maleEndings' => ['son', 'sson'],
+                'femaleEndings' => ['dóttir', 'dottir'],
+                // Note: Forename endings are applied via coda selection:
+                // Male forenames typically end in: -ur, -ir, -ar, -orn, -inn
+                // Female forenames typically end in: -a, -ey, -ún, -ís, -hildur
+                'forenameEndingsMale' => ['ur', 'ir', 'ar', 'orn', 'inn', 'ulf'],
+                'forenameEndingsFemale' => ['a', 'ey', 'ún', 'ís', 'hildur', 'dis', 'rún'],
                 'prefixes' => [],
-                'lengthMod' => 0
+                'lengthMod' => 0,
+                'patronymic' => true  // Flag indicating strict patronymic surnames
             ],
+            // Finnish is Uralic (Finno-Ugric), NOT Germanic like other Nordic languages
+            // Finnish has strict vowel harmony and agglutinative structure
+            // Common name suffixes: -nen (patronymic/place origin), -la/-lä (place)
             'finnish' => [
-                'baseCulture' => 'nordic',
-                'onsetMods' => ['h' => 3, 'k' => 3, 'p' => 2, 't' => 2],
-                'nucleiMods' => ['ä' => 3, 'ö' => 2, 'y' => 2, 'aa' => 2, 'ii' => 2],
-                'codaMods' => ['nen' => 4, 'kka' => 2],
-                'maleEndings' => ['nen', 'ri', 'kka', 'mo', 'o'],
-                'femaleEndings' => ['nen', 'kka', 'a', 'i', 'liina'],
+                'baseCulture' => 'finnish',  // Uses dedicated Finnish base profile
+                'onsetMods' => ['h' => 3, 'k' => 3, 'p' => 2, 't' => 2, 'v' => 2, 'j' => 2],
+                'nucleiMods' => ['ä' => 3, 'ö' => 2, 'y' => 2, 'aa' => 2, 'ii' => 2, 'uu' => 2, 'ee' => 2],
+                'codaMods' => ['nen' => 4, 'kka' => 2, 'la' => 2, 'lä' => 2],
+                // Finnish surnames often end in -nen (patronymic origin) or -la/-lä (place origin)
+                'maleEndings' => ['nen', 'ri', 'kka', 'mo', 'o', 'i'],
+                'femaleEndings' => ['nen', 'kka', 'a', 'i', 'liina', 'ja', 'iina'],
                 'prefixes' => [],
                 'lengthMod' => 1,
-                'vowelHarmony' => true
+                'vowelHarmony' => true  // Front/back vowel harmony is mandatory in Finnish
             ],
             
             // =====================
