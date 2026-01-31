@@ -1,0 +1,33 @@
+meta {
+  name: Get Options - Gender
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/options.php?field=gender
+  body: none
+  auth: none
+}
+
+headers {
+  X-API-KEY: {{apiKey}}
+}
+
+tests {
+  test("Status code is 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("Response is an array of options", function() {
+    const data = res.getBody();
+    expect(data).to.be.an('array');
+    expect(data.length).to.be.greaterThan(0);
+  });
+  
+  test("Options have value and label", function() {
+    const data = res.getBody();
+    expect(data[0]).to.have.property('value');
+    expect(data[0]).to.have.property('label');
+  });
+}

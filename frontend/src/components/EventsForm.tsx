@@ -13,7 +13,7 @@ interface EventsFormProps {
   loading?: boolean;
 }
 
-const fields = ['type', 'theme', 'tone'] as const;
+const fields = ['event_type', 'theme', 'tone'] as const;
 type Field = typeof fields[number];
 
 const EventsForm: React.FC<EventsFormProps> = ({ onGenerate, loading }) => {
@@ -23,7 +23,7 @@ const EventsForm: React.FC<EventsFormProps> = ({ onGenerate, loading }) => {
   const [tone, setTone] = useState('professional');
 
   const [options, setOptions] = useState<Record<Field, Option[]>>({
-    type: [], theme: [], tone: []
+    event_type: [], theme: [], tone: []
   });
 
   useEffect(() => {
@@ -32,7 +32,7 @@ const EventsForm: React.FC<EventsFormProps> = ({ onGenerate, loading }) => {
       .then(results => {
         if (!isMounted) return;
         setOptions({
-          type: results[0],
+          event_type: results[0],
           theme: results[1],
           tone: results[2],
         });
@@ -76,7 +76,7 @@ const EventsForm: React.FC<EventsFormProps> = ({ onGenerate, loading }) => {
               name="type"
               value={type}
               onChange={setType}
-              options={options.type}
+              options={options.event_type}
               className="flex flex-col"
             />
             <FormSelectField

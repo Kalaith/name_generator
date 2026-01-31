@@ -1,0 +1,9 @@
+{
+    "version": "1",
+    "name": "Name Generator API",
+    "type": "collection",
+    "ignore": [
+        "node_modules",
+        ".git"
+    ]
+}

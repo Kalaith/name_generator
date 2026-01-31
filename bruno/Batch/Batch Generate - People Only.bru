@@ -1,0 +1,28 @@
+meta {
+  name: Batch Generate - People Only
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/generate_batch.php?count=10&types[]=people
+  body: none
+  auth: none
+}
+
+headers {
+  X-API-KEY: {{apiKey}}
+}
+
+tests {
+  test("Status code is 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("Response contains people array with 10 names", function() {
+    const data = res.getBody();
+    expect(data).to.have.property('people');
+    expect(data.people).to.be.an('array');
+    expect(data.people.length).to.equal(10);
+  });
+}

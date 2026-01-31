@@ -1,0 +1,27 @@
+meta {
+  name: Generate Titles - Dark Heroic
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/generate_title.php?count=5&type=game&genre=fantasy&tone=dark&setting=dark&gender=male&race=orc&species=humanoid
+  body: none
+  auth: none
+}
+
+headers {
+  X-API-KEY: {{apiKey}}
+}
+
+tests {
+  test("Status code is 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("Response contains titles array", function() {
+    const data = res.getBody();
+    expect(data).to.have.property('titles');
+    expect(data.titles).to.be.an('array');
+  });
+}

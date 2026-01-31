@@ -1,0 +1,27 @@
+meta {
+  name: Generate Places - Water Features
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/generate_place.php?count=5&genre=fantasy&location_type=water&tone=magical&climate=cold&size=small
+  body: none
+  auth: none
+}
+
+headers {
+  X-API-KEY: {{apiKey}}
+}
+
+tests {
+  test("Status code is 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("Response contains locations array", function() {
+    const data = res.getBody();
+    expect(data).to.have.property('locations');
+    expect(data.locations).to.be.an('array');
+  });
+}

@@ -1,0 +1,33 @@
+meta {
+  name: Get Options - Dialect
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/options.php?field=dialect
+  body: none
+  auth: none
+}
+
+headers {
+  X-API-KEY: {{apiKey}}
+}
+
+tests {
+  test("Status code is 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("Response is an array of options", function() {
+    const data = res.getBody();
+    expect(data).to.be.an('array');
+    expect(data.length).to.be.greaterThan(0);
+  });
+  
+  test("Dialect options have cultures array", function() {
+    const data = res.getBody();
+    expect(data[0]).to.have.property('cultures');
+    expect(data[0].cultures).to.be.an('array');
+  });
+}

@@ -1,0 +1,27 @@
+meta {
+  name: Generate Titles - Elven Quest
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/generate_title.php?count=5&type=quest&genre=fantasy&tone=magical&setting=forest&gender=female&race=elf&species=humanoid
+  body: none
+  auth: none
+}
+
+headers {
+  X-API-KEY: {{apiKey}}
+}
+
+tests {
+  test("Status code is 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("Response contains titles array", function() {
+    const data = res.getBody();
+    expect(data).to.have.property('titles');
+    expect(data.titles).to.be.an('array');
+  });
+}

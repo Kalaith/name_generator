@@ -1,0 +1,32 @@
+meta {
+  name: Generate Titles - Fantasy Book
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/generate_title.php?count=5&type=book&genre=fantasy&tone=mysterious&keywords=dragon&setting=medieval&gender=neutral&race=human&species=humanoid
+  body: none
+  auth: none
+}
+
+headers {
+  X-API-KEY: {{apiKey}}
+}
+
+tests {
+  test("Status code is 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("Response contains titles array", function() {
+    const data = res.getBody();
+    expect(data).to.have.property('titles');
+    expect(data.titles).to.be.an('array');
+  });
+  
+  test("Returns correct count of titles", function() {
+    const data = res.getBody();
+    expect(data.titles.length).to.equal(5);
+  });
+}

@@ -1,0 +1,27 @@
+meta {
+  name: Generate Events - Arts Festival
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/generate_event.php?count=5&type=festival&theme=arts&tone=romantic
+  body: none
+  auth: none
+}
+
+headers {
+  X-API-KEY: {{apiKey}}
+}
+
+tests {
+  test("Status code is 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("Response contains names array", function() {
+    const data = res.getBody();
+    expect(data).to.have.property('names');
+    expect(data.names).to.be.an('array');
+  });
+}

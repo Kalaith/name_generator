@@ -1,0 +1,49 @@
+meta {
+  name: Batch Generate - All Types
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/generate_batch.php?count=5&types[]=people&types[]=places&types[]=events&types[]=titles
+  body: none
+  auth: none
+}
+
+headers {
+  X-API-KEY: {{apiKey}}
+}
+
+tests {
+  test("Status code is 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("Response contains people array", function() {
+    const data = res.getBody();
+    expect(data).to.have.property('people');
+    expect(data.people).to.be.an('array');
+    expect(data.people.length).to.equal(5);
+  });
+  
+  test("Response contains places array", function() {
+    const data = res.getBody();
+    expect(data).to.have.property('places');
+    expect(data.places).to.be.an('array');
+    expect(data.places.length).to.equal(5);
+  });
+  
+  test("Response contains events array", function() {
+    const data = res.getBody();
+    expect(data).to.have.property('events');
+    expect(data.events).to.be.an('array');
+    expect(data.events.length).to.equal(5);
+  });
+  
+  test("Response contains titles array", function() {
+    const data = res.getBody();
+    expect(data).to.have.property('titles');
+    expect(data.titles).to.be.an('array');
+    expect(data.titles.length).to.equal(5);
+  });
+}

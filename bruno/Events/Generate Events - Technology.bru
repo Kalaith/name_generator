@@ -1,0 +1,32 @@
+meta {
+  name: Generate Events - Technology
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/generate_event.php?count=5&type=conference&theme=technology&tone=professional
+  body: none
+  auth: none
+}
+
+headers {
+  X-API-KEY: {{apiKey}}
+}
+
+tests {
+  test("Status code is 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("Response contains names array", function() {
+    const data = res.getBody();
+    expect(data).to.have.property('names');
+    expect(data.names).to.be.an('array');
+  });
+  
+  test("Returns correct count of events", function() {
+    const data = res.getBody();
+    expect(data.names.length).to.equal(5);
+  });
+}

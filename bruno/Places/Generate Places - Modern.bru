@@ -1,0 +1,32 @@
+meta {
+  name: Generate Places - Modern
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/generate_place.php?count=5&genre=modern&location_type=urban&tone=neutral&climate=temperate&size=large
+  body: none
+  auth: none
+}
+
+headers {
+  X-API-KEY: {{apiKey}}
+}
+
+tests {
+  test("Status code is 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("Response contains locations array", function() {
+    const data = res.getBody();
+    expect(data).to.have.property('locations');
+    expect(data.locations).to.be.an('array');
+  });
+  
+  test("Returns correct count of locations", function() {
+    const data = res.getBody();
+    expect(data.locations.length).to.equal(5);
+  });
+}

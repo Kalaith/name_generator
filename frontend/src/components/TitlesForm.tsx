@@ -18,7 +18,7 @@ interface TitlesFormProps {
   loading?: boolean;
 }
 
-const fields = ['type', 'genre', 'tone', 'setting', 'gender', 'race', 'species'] as const;
+const fields = ['title_type', 'genre', 'tone', 'setting', 'gender', 'race', 'species'] as const;
 type Field = typeof fields[number];
 
 const TitlesForm: React.FC<TitlesFormProps> = ({ onGenerate, loading }) => {
@@ -33,7 +33,7 @@ const TitlesForm: React.FC<TitlesFormProps> = ({ onGenerate, loading }) => {
   const [species, setSpecies] = useState('humanoid');
 
   const [options, setOptions] = useState<Record<Field, Option[]>>({
-    type: [], genre: [], tone: [], setting: [], gender: [], race: [], species: []
+    title_type: [], genre: [], tone: [], setting: [], gender: [], race: [], species: []
   });
 
   useEffect(() => {
@@ -42,7 +42,7 @@ const TitlesForm: React.FC<TitlesFormProps> = ({ onGenerate, loading }) => {
       .then(results => {
         if (!isMounted) return;
         setOptions({
-          type: results[0],
+          title_type: results[0],
           genre: results[1],
           tone: results[2],
           setting: results[3],
@@ -90,7 +90,7 @@ const TitlesForm: React.FC<TitlesFormProps> = ({ onGenerate, loading }) => {
               name="type"
               value={type}
               onChange={setType}
-              options={options.type}
+              options={options.title_type}
               className="flex flex-col"
             />
             <FormSelectField

@@ -91,7 +91,108 @@ $options = [
         ['value' => 'modern', 'label' => 'Modern'],
         ['value' => 'medieval', 'label' => 'Medieval'],
         ['value' => 'ancient', 'label' => 'Ancient'],
-    ]
+    ],
+    
+    // Places tab options
+    'genre' => [
+        ['value' => 'fantasy', 'label' => 'Fantasy'],
+        ['value' => 'modern', 'label' => 'Modern'],
+        ['value' => 'scifi', 'label' => 'Sci-Fi'],
+        ['value' => 'historical', 'label' => 'Historical'],
+    ],
+    'location_type' => [
+        ['value' => 'water', 'label' => 'Water Feature'],
+        ['value' => 'land', 'label' => 'Land Feature'],
+        ['value' => 'forest', 'label' => 'Forest'],
+        ['value' => 'mystical', 'label' => 'Mystical Location'],
+        ['value' => 'settlement', 'label' => 'Settlement'],
+        ['value' => 'urban', 'label' => 'Urban'],
+    ],
+    'tone' => [
+        ['value' => 'mystical', 'label' => 'Mystical'],
+        ['value' => 'dark', 'label' => 'Dark'],
+        ['value' => 'heroic', 'label' => 'Heroic'],
+        ['value' => 'neutral', 'label' => 'Neutral'],
+        ['value' => 'romantic', 'label' => 'Romantic'],
+        ['value' => 'adventurous', 'label' => 'Adventurous'],
+        ['value' => 'magical', 'label' => 'Magical'],
+        ['value' => 'professional', 'label' => 'Professional'],
+    ],
+    'climate' => [
+        ['value' => 'cold', 'label' => 'Cold'],
+        ['value' => 'hot', 'label' => 'Hot'],
+        ['value' => 'temperate', 'label' => 'Temperate'],
+        ['value' => 'tropical', 'label' => 'Tropical'],
+        ['value' => 'arid', 'label' => 'Arid'],
+    ],
+    'size' => [
+        ['value' => 'tiny', 'label' => 'Tiny'],
+        ['value' => 'small', 'label' => 'Small'],
+        ['value' => 'medium', 'label' => 'Medium'],
+        ['value' => 'large', 'label' => 'Large'],
+        ['value' => 'huge', 'label' => 'Huge'],
+    ],
+    
+    // Events tab options
+    'theme' => [
+        ['value' => 'technology', 'label' => 'Technology'],
+        ['value' => 'arts', 'label' => 'Arts & Culture'],
+        ['value' => 'business', 'label' => 'Business'],
+        ['value' => 'science', 'label' => 'Science'],
+        ['value' => 'health', 'label' => 'Health & Wellness'],
+        ['value' => 'education', 'label' => 'Education'],
+        ['value' => 'entertainment', 'label' => 'Entertainment'],
+        ['value' => 'sports', 'label' => 'Sports'],
+    ],
+    'event_type' => [
+        ['value' => 'conference', 'label' => 'Conference'],
+        ['value' => 'festival', 'label' => 'Festival'],
+        ['value' => 'workshop', 'label' => 'Workshop'],
+        ['value' => 'summit', 'label' => 'Summit'],
+        ['value' => 'expo', 'label' => 'Expo'],
+        ['value' => 'gala', 'label' => 'Gala'],
+        ['value' => 'retreat', 'label' => 'Retreat'],
+        ['value' => 'forum', 'label' => 'Forum'],
+    ],
+    
+    // Titles tab options
+    'title_type' => [
+        ['value' => 'book', 'label' => 'Book Title'],
+        ['value' => 'movie', 'label' => 'Movie Title'],
+        ['value' => 'game', 'label' => 'Game Title'],
+        ['value' => 'song', 'label' => 'Song Title'],
+        ['value' => 'story', 'label' => 'Story Title'],
+        ['value' => 'chapter', 'label' => 'Chapter Title'],
+        ['value' => 'quest', 'label' => 'Quest/Mission'],
+        ['value' => 'character', 'label' => 'Character Title'],
+    ],
+    'setting' => [
+        ['value' => 'medieval', 'label' => 'Medieval'],
+        ['value' => 'magical', 'label' => 'Magical'],
+        ['value' => 'dark', 'label' => 'Dark'],
+        ['value' => 'forest', 'label' => 'Forest'],
+        ['value' => 'urban', 'label' => 'Urban'],
+        ['value' => 'tech', 'label' => 'Tech'],
+        ['value' => 'corporate', 'label' => 'Corporate'],
+        ['value' => 'thriller', 'label' => 'Thriller'],
+    ],
+    'race' => [
+        ['value' => 'human', 'label' => 'Human'],
+        ['value' => 'elf', 'label' => 'Elf'],
+        ['value' => 'dwarf', 'label' => 'Dwarf'],
+        ['value' => 'orc', 'label' => 'Orc'],
+        ['value' => 'halfling', 'label' => 'Halfling'],
+        ['value' => 'dragonborn', 'label' => 'Dragonborn'],
+    ],
+    'species' => [
+        ['value' => 'humanoid', 'label' => 'Humanoid'],
+        ['value' => 'feline', 'label' => 'Feline'],
+        ['value' => 'canine', 'label' => 'Canine'],
+        ['value' => 'avian', 'label' => 'Avian'],
+        ['value' => 'reptilian', 'label' => 'Reptilian'],
+        ['value' => 'aquatic', 'label' => 'Aquatic'],
+        ['value' => 'insectoid', 'label' => 'Insectoid'],
+    ],
 ];
 
 $field = $_GET['field'] ?? null;
