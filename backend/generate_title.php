@@ -2,6 +2,9 @@
 header('Content-Type: application/json');
 
 // Get parameters
+require_once 'auth.php';
+validateApiKey();
+
 $type = $_GET['type'] ?? 'book';
 $genre = $_GET['genre'] ?? 'fantasy';
 $tone = $_GET['tone'] ?? 'mysterious';

@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import FormSelectField from './FormSelectField';
-import { fetchSelectOptions } from '../utils/api';
-import type { Option } from '../types';
+import { fetchSelectOptions, fetchDialectOptions } from '../utils/api';
+import type { Option, DialectOption } from '../types';
 
 interface PeopleFormProps {
   onGenerate: (params: {
@@ -11,6 +11,7 @@ interface PeopleFormProps {
     method: string;
     type: string;
     period: string;
+    dialect: string;
     excludeReal: boolean;
   }) => void;
   loading?: boolean;
@@ -26,17 +27,24 @@ const PeopleForm: React.FC<PeopleFormProps> = ({ onGenerate, loading }) => {
   const [method, setMethod] = useState('markov_chain');
   const [type, setType] = useState('full_name');
   const [period, setPeriod] = useState('modern');
+  const [dialect, setDialect] = useState('any');
   const [excludeReal, setExcludeReal] = useState(false);
 
   const [options, setOptions] = useState<Record<Field, Option[]>>({
     gender: [], culture: [], method: [], type: [], period: []
   });
+  const [dialectOptions, setDialectOptions] = useState<DialectOption[]>([]);
   const [loadingOptions, setLoadingOptions] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
     setLoadingOptions(true);
-    Promise.all(fields.map(field => fetchSelectOptions(field)))
+
+    // Fetch both regular options and dialect options
+    Promise.all([
+      ...fields.map(field => fetchSelectOptions(field)),
+      fetchDialectOptions()
+    ])
       .then(results => {
         if (!isMounted) return;
         setOptions({
@@ -46,6 +54,7 @@ const PeopleForm: React.FC<PeopleFormProps> = ({ onGenerate, loading }) => {
           type: results[3],
           period: results[4],
         });
+        setDialectOptions(results[5] as DialectOption[]);
         setLoadingOptions(false);
       })
       .catch(() => {
@@ -54,9 +63,47 @@ const PeopleForm: React.FC<PeopleFormProps> = ({ onGenerate, loading }) => {
     return () => { isMounted = false; };
   }, []);
 
+  // Filter dialects based on selected culture
+  const filteredDialects = useMemo(() => {
+    if (!dialectOptions.length) return [];
+
+    return dialectOptions.filter(d => {
+      // Always show "Any / Default"
+      if (d.value === 'any') return true;
+      // Show dialects that match the selected culture or are universal
+      if (d.cultures?.includes('all')) return true;
+      if (culture === 'any') return true; // Show all dialects if culture is "any"
+      return d.cultures?.includes(culture);
+    });
+  }, [dialectOptions, culture]);
+
+  // Reset dialect when culture changes (if current dialect doesn't match)
+  useEffect(() => {
+    if (dialect !== 'any') {
+      const currentDialect = dialectOptions.find(d => d.value === dialect);
+      if (currentDialect && !currentDialect.cultures?.includes('all')) {
+        if (!currentDialect.cultures?.includes(culture) && culture !== 'any') {
+          setDialect('any');
+        }
+      }
+    }
+  }, [culture, dialect, dialectOptions]);
+
+  // Check if phonetic method is selected (dialects only work with phonetic)
+  const isPhoneticMethod = method === 'phonetic_pattern';
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onGenerate({ count, gender, culture, method, type, period, excludeReal });
+    onGenerate({
+      count,
+      gender,
+      culture,
+      method,
+      type,
+      period,
+      dialect: isPhoneticMethod ? dialect : 'any',
+      excludeReal
+    });
   };
 
   return (
@@ -65,7 +112,7 @@ const PeopleForm: React.FC<PeopleFormProps> = ({ onGenerate, loading }) => {
         <h2 className="text-2xl font-bold text-white mb-2">👥 Generate People Names</h2>
         <p className="text-blue-100">Create unique, culturally-inspired names for your characters and stories</p>
       </div>
-      
+
       <form onSubmit={handleSubmit} className="p-8 space-y-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div className="space-y-2">
@@ -84,7 +131,7 @@ const PeopleForm: React.FC<PeopleFormProps> = ({ onGenerate, loading }) => {
             />
             <p className="text-sm text-gray-500">Choose between 1 and 20 names</p>
           </div>
-          
+
           <FormSelectField
             label="Gender"
             name="gender"
@@ -93,7 +140,7 @@ const PeopleForm: React.FC<PeopleFormProps> = ({ onGenerate, loading }) => {
             options={options.gender}
             className="space-y-2"
           />
-          
+
           <FormSelectField
             label="Culture"
             name="culture"
@@ -102,7 +149,7 @@ const PeopleForm: React.FC<PeopleFormProps> = ({ onGenerate, loading }) => {
             options={options.culture}
             className="space-y-2"
           />
-          
+
           <FormSelectField
             label="Generation Method"
             name="method"
@@ -111,7 +158,37 @@ const PeopleForm: React.FC<PeopleFormProps> = ({ onGenerate, loading }) => {
             options={options.method}
             className="space-y-2"
           />
-          
+
+          {/* Regional Dialect - only shown when phonetic method is selected */}
+          {isPhoneticMethod && (
+            <div className="space-y-2">
+              <label htmlFor="dialect" className="block text-base font-semibold text-gray-800 dark:text-gray-100">
+                Regional Dialect
+                <span className="ml-2 text-xs font-normal text-blue-500 bg-blue-50 dark:bg-blue-900/30 px-2 py-0.5 rounded-full">
+                  Phonetic only
+                </span>
+              </label>
+              <select
+                id="dialect"
+                name="dialect"
+                value={dialect}
+                onChange={e => setDialect(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+              >
+                {filteredDialects.map(opt => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+              <p className="text-sm text-gray-500">
+                {culture === 'any'
+                  ? 'Select a culture to see regional dialects'
+                  : `Regional variations for ${culture} names`}
+              </p>
+            </div>
+          )}
+
           <FormSelectField
             label="Name Type"
             name="type"
@@ -120,7 +197,7 @@ const PeopleForm: React.FC<PeopleFormProps> = ({ onGenerate, loading }) => {
             options={options.type}
             className="space-y-2"
           />
-          
+
           <FormSelectField
             label="Time Period"
             name="period"
@@ -130,7 +207,7 @@ const PeopleForm: React.FC<PeopleFormProps> = ({ onGenerate, loading }) => {
             className="space-y-2"
           />
         </div>
-        
+
         <div className="flex items-center gap-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
           <input
             type="checkbox"
@@ -146,7 +223,7 @@ const PeopleForm: React.FC<PeopleFormProps> = ({ onGenerate, loading }) => {
             <p className="text-sm text-gray-500">Avoid using real-world names in results</p>
           </div>
         </div>
-        
+
         <div className="flex justify-center pt-4">
           <button
             type="submit"
@@ -186,4 +263,4 @@ const PeopleForm: React.FC<PeopleFormProps> = ({ onGenerate, loading }) => {
   );
 };
 
-export default PeopleForm; 
+export default PeopleForm;

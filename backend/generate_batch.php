@@ -1,5 +1,8 @@
 <?php
 header('Content-Type: application/json');
+require_once 'auth.php';
+validateApiKey();
+
 $count = intval($_GET['count'] ?? 1);
 $types = isset($_GET['types']) ? (array)$_GET['types'] : ['people'];
 

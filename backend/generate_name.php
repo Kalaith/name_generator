@@ -3,6 +3,9 @@
 // Name Generator API
 header('Content-Type: application/json');
 
+require_once 'auth.php';
+validateApiKey();
+
 require_once 'generators.php';
 
 // Initialize the NameGenerators class
@@ -14,6 +17,7 @@ $culture = $_GET['culture'] ?? 'western';
 $gender = $_GET['gender'] ?? 'male';
 $count = intval($_GET['count'] ?? 1);
 $period = $_GET['period'] ?? 'medieval'; // for historical
+$dialect = $_GET['dialect'] ?? null; // regional dialect
 
 $names = [];
 for ($i = 0; $i < $count; $i++) {
@@ -25,16 +29,16 @@ for ($i = 0; $i < $count; $i++) {
         case 'markov_chain':
             $names[] = $generators->generateMarkovName($culture, $actualGender);
             break;
-        case 'syllable':
+        case 'syllable_based':
             $names[] = $generators->generateSyllableName($culture);
             break;
-        case 'phonetic':
-            $names[] = $generators->generatePhoneticName($culture, $actualGender);
+        case 'phonetic_pattern':
+            $names[] = $generators->generatePhoneticName($culture, $actualGender, $dialect);
             break;
-        case 'historical':
+        case 'historical_pattern':
             $names[] = $generators->generateHistoricalName($culture, $period, $actualGender);
             break;
-        case 'fantasy':
+        case 'fantasy_generated':
             $names[] = $generators->generateSyllableName('fantasy');
             break;
         default:

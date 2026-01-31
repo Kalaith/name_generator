@@ -18,10 +18,16 @@ export interface PeopleParams {
   method: string;
   type: string;
   period: string;
+  dialect: string;
   excludeReal: boolean;
 }
 
 export interface Option {
   value: string;
   label: string;
+}
+
+// Extended option type for dialects with culture filtering
+export interface DialectOption extends Option {
+  cultures: string[];
 }

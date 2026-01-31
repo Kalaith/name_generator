@@ -9,7 +9,7 @@ import BatchGeneratorPage from './pages/BatchGeneratorPage';
 
 const App: React.FC = () => {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/name_generator">
       <SharedLayout>
         <Routes>
           <Route path="/" element={<Navigate to="/people" replace />} />

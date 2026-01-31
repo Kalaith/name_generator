@@ -1,5 +1,8 @@
 <?php
 header('Content-Type: application/json');
+require_once 'auth.php';
+validateApiKey();
+
 $type = $_GET['type'] ?? 'conference';
 $theme = $_GET['theme'] ?? 'technology';
 $tone = $_GET['tone'] ?? 'professional';

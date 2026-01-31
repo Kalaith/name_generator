@@ -1,0 +1,51 @@
+# WebHatchery - Robust URL Rewriting Configuration
+# This file handles routing for project deployments in subfolders
+
+# Prevent Apache from resolving 'api' folder directly instead of using rewrites
+# Also disable directory listing for security
+Options -MultiViews -Indexes
+
+RewriteEngine On
+
+# CORS Headers for all API responses
+Header always set Access-Control-Allow-Origin "*"
+Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS, PATCH"
+Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With, Origin, Accept"
+
+# Handle preflight OPTIONS requests for CORS
+RewriteCond %{REQUEST_METHOD} OPTIONS
+RewriteRule ^api(/.*)?$ - [R=204,L]
+
+# Route all /api/* requests to the backend
+# This redirects api/* to api/public/index.php within this directory
+RewriteRule ^api(/.*)?$ api/public/index.php [QSA,L]
+
+# Handle frontend routing for Single Page Application (SPA)  
+# If the request is not for an API endpoint, a real file, or a real directory,
+# serve the main index.html file (for React Router)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !/api(/|$)
+RewriteRule . index.html [L]
+
+# Security headers
+Header always set X-Content-Type-Options nosniff
+Header always set X-Frame-Options DENY
+Header always set X-XSS-Protection "1; mode=block"
+
+# Cache static assets (using mod_headers only)
+<FilesMatch "\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$">
+    Header set Cache-Control "public, max-age=2592000"
+</FilesMatch>
+
+# Don't cache HTML files (for development)
+<FilesMatch "\.html$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+</FilesMatch>
+
+# Protect sensitive files
+<FilesMatch "\.(env|log|ini)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>

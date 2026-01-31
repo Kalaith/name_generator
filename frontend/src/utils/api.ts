@@ -1,6 +1,14 @@
-import type { PersonNameResult, PeopleParams, Option } from '../types';
+import type { PersonNameResult, PeopleParams, Option, DialectOption } from '../types';
 
 export type { PeopleParams };
+
+// TODO: In a real app, this should be in an environment variable or config
+const API_KEY = 'development_key_123';
+
+const getHeaders = () => ({
+  'Content-Type': 'application/json',
+  'X-API-KEY': API_KEY,
+});
 
 export async function fetchPeopleNames(params: PeopleParams): Promise<PersonNameResult[]> {
   const query = new URLSearchParams({
@@ -10,9 +18,12 @@ export async function fetchPeopleNames(params: PeopleParams): Promise<PersonName
     method: params.method,
     type: params.type,
     period: params.period,
+    dialect: params.dialect || 'any',
     excludeReal: params.excludeReal ? '1' : '0',
   });
-  const res = await fetch(`api/generate_name.php?${query.toString()}`);
+  const res = await fetch(`api/generate_name.php?${query.toString()}`, {
+    headers: getHeaders(),
+  });
   if (!res.ok) throw new Error('API error');
   const data = await res.json();
 
@@ -38,10 +49,12 @@ export async function fetchPlaceNames(params: PlaceParams): Promise<string[]> {
     climate: params.climate,
     size: params.size,
   });
-  const res = await fetch(`api/generate_place.php?${query.toString()}`);
+  const res = await fetch(`api/generate_place.php?${query.toString()}`, {
+    headers: getHeaders(),
+  });
   if (!res.ok) throw new Error('API error');
   const data = await res.json();
-  return data.names || [];
+  return data.names || data.locations || []; // Handle both formats just in case
 }
 
 export async function fetchEventNames(params: { count: number; type: string; theme: string; tone: string; }): Promise<string[]> {
@@ -51,7 +64,9 @@ export async function fetchEventNames(params: { count: number; type: string; the
     theme: params.theme,
     tone: params.tone,
   });
-  const res = await fetch(`api/generate_event.php?${query.toString()}`);
+  const res = await fetch(`api/generate_event.php?${query.toString()}`, {
+    headers: getHeaders(),
+  });
   if (!res.ok) throw new Error('API error');
   const data = await res.json();
   return data.names || [];
@@ -81,7 +96,9 @@ export async function fetchTitleNames(params: TitleParams): Promise<string[]> {
     race: params.race,
     species: params.species,
   });
-  const res = await fetch(`api/generate_title.php?${query.toString()}`);
+  const res = await fetch(`api/generate_title.php?${query.toString()}`, {
+    headers: getHeaders(),
+  });
   if (!res.ok) throw new Error('API error');
   const data = await res.json();
   return data.titles || [];
@@ -92,13 +109,25 @@ export async function fetchBatchResults(params: { count: number; types: string[]
     count: params.count.toString(),
   });
   params.types.forEach(type => query.append('types[]', type));
-  const res = await fetch(`api/generate_batch.php?${query.toString()}`);
+  const res = await fetch(`api/generate_batch.php?${query.toString()}`, {
+    headers: getHeaders(),
+  });
   if (!res.ok) throw new Error('API error');
   return res.json();
 }
 
 export async function fetchSelectOptions(field: string): Promise<Option[]> {
-  const res = await fetch(`api/options.php?field=${encodeURIComponent(field)}`);
+  const res = await fetch(`api/options.php?field=${encodeURIComponent(field)}`, {
+    headers: getHeaders(),
+  });
   if (!res.ok) throw new Error('Failed to fetch options');
   return res.json();
-} 
+}
+
+export async function fetchDialectOptions(): Promise<DialectOption[]> {
+  const res = await fetch(`api/options.php?field=dialect`, {
+    headers: getHeaders(),
+  });
+  if (!res.ok) throw new Error('Failed to fetch dialect options');
+  return res.json();
+}

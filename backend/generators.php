@@ -1,12 +1,16 @@
 <?php
 
+require_once 'PhoneticEngine.php';
+
 class NameGenerators {
     private $phoneticPatterns;
     private $syllableBanks;
     private $markovChains;
+    private $phoneticEngine;
 
     public function __construct() {
         $this->initializeData();
+        $this->phoneticEngine = new PhoneticEngine();
     }
 
     private function initializeData() {
@@ -139,14 +143,8 @@ class NameGenerators {
         return ucfirst($name);
     }
 
-    public function generatePhoneticName($culture, $gender) {
-        $patterns = $this->phoneticPatterns[$culture] ?? $this->phoneticPatterns['western'];
-        $pattern = $patterns['patterns'][array_rand($patterns['patterns'])];
-        $name = '';
-        foreach (str_split($pattern) as $char) {
-            $name .= $char === 'C' ? $patterns['consonants'][array_rand($patterns['consonants'])] : $patterns['vowels'][array_rand($patterns['vowels'])];
-        }
-        return ucfirst($name);
+    public function generatePhoneticName($culture, $gender, $dialect = null) {
+        return $this->phoneticEngine->generate($culture, $gender, $dialect);
     }
 
     public function generateHistoricalName($culture, $period, $gender) {
