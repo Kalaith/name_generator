@@ -13,7 +13,7 @@ const PlacesGeneratorPage: React.FC = () => {
     try {
       const results = await fetchPlaceNames(params);
       setPlacesResults(results);
-    } catch (e) {
+    } catch {
       setPlacesResults([]);
     } finally {
       setPlacesLoading(false);
@@ -32,7 +32,7 @@ const PlacesGeneratorPage: React.FC = () => {
           </p>
         </div>
       </div>
-      
+
       <PlacesForm onGenerate={handlePlacesGenerate} loading={placesLoading} />
       <ResultsGrid results={placesResults} type="places" />
     </div>

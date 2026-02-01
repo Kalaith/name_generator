@@ -12,7 +12,7 @@ const BatchGeneratorPage: React.FC = () => {
     try {
       const results = await fetchBatchResults(params);
       setBatchResults(results);
-    } catch (e) {
+    } catch {
       setBatchResults({});
     } finally {
       setBatchLoading(false);
@@ -31,9 +31,9 @@ const BatchGeneratorPage: React.FC = () => {
           </p>
         </div>
       </div>
-      
+
       <BatchForm onGenerate={handleBatchGenerate} loading={batchLoading} />
-      
+
       <div className="space-y-6 mt-6">
         {['people', 'places', 'events', 'titles'].map(type => (
           batchResults[type] && (
@@ -41,7 +41,7 @@ const BatchGeneratorPage: React.FC = () => {
               <h3 className="text-lg font-bold mb-2 capitalize text-gray-900 dark:text-gray-100">
                 {type}
               </h3>
-              <ResultsGrid results={batchResults[type]} type={type as any} />
+              <ResultsGrid results={batchResults[type]} type={type as 'people' | 'places' | 'events' | 'titles'} />
             </div>
           )
         ))}

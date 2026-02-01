@@ -14,7 +14,7 @@ const PeopleGeneratorPage: React.FC = () => {
     try {
       const results = await fetchPeopleNames(params);
       setPeopleResults(results);
-    } catch (e) {
+    } catch {
       setPeopleResults([]);
     } finally {
       setLoading(false);
@@ -33,7 +33,7 @@ const PeopleGeneratorPage: React.FC = () => {
           </p>
         </div>
       </div>
-      
+
       <PeopleForm onGenerate={handlePeopleGenerate} loading={loading} />
       <ResultsGrid results={peopleResults} type="people" />
     </div>

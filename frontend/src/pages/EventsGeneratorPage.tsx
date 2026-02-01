@@ -12,7 +12,7 @@ const EventsGeneratorPage: React.FC = () => {
     try {
       const results = await fetchEventNames(params);
       setEventsResults(results);
-    } catch (e) {
+    } catch {
       setEventsResults([]);
     } finally {
       setEventsLoading(false);
@@ -31,7 +31,7 @@ const EventsGeneratorPage: React.FC = () => {
           </p>
         </div>
       </div>
-      
+
       <EventsForm onGenerate={handleEventsGenerate} loading={eventsLoading} />
       <ResultsGrid results={eventsResults} type="events" />
     </div>

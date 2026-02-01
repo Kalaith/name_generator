@@ -1,7 +1,8 @@
 import React from 'react';
+import type { PersonNameResult } from '../types';
 
 interface ResultsGridProps {
-  results: any[];
+  results: string[] | PersonNameResult[];
   type: 'people' | 'places' | 'events' | 'titles';
 }
 
@@ -46,27 +47,31 @@ const ResultsGrid: React.FC<ResultsGridProps> = ({ results, type }) => {
           {results.length} result{results.length !== 1 ? 's' : ''}
         </span>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {results.map((item, idx) => {
           switch (type) {
-            case 'people':
-              // Backend returns array of strings only
+            case 'people': {
+              // People results are PersonNameResult objects
+              const person = item as PersonNameResult;
+              const displayName = person.name || `${person.firstName || ''} ${person.lastName || ''}`.trim();
               return (
                 <div key={idx} className="group bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 hover:shadow-lg hover:scale-102 transition-all duration-200">
                   <div className="flex items-start gap-3">
                     <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                      {item.charAt(0)}
+                      {displayName.charAt(0)}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-bold text-lg text-gray-900 dark:text-white truncate">{item}</h4>
+                      <h4 className="font-bold text-lg text-gray-900 dark:text-white truncate">{displayName}</h4>
                     </div>
                   </div>
                 </div>
               );
+            }
             case 'places':
             case 'events':
-            case 'titles':
+            case 'titles': {
+              const name = item as string;
               return (
                 <div key={idx} className="group bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 hover:shadow-lg hover:scale-102 transition-all duration-200">
                   <div className="flex items-center gap-3">
@@ -74,11 +79,12 @@ const ResultsGrid: React.FC<ResultsGridProps> = ({ results, type }) => {
                       {getIcon(type)}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-semibold text-lg text-gray-900 dark:text-white">{item}</h4>
+                      <h4 className="font-semibold text-lg text-gray-900 dark:text-white">{name}</h4>
                     </div>
                   </div>
                 </div>
               );
+            }
             default:
               return null;
           }

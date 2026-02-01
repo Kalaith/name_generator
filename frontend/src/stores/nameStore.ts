@@ -6,7 +6,7 @@ export interface GeneratedName {
   id: string;
   name: string;
   type: 'person' | 'place' | 'event' | 'title';
-  details: any; // Specific to each type
+  details: Record<string, unknown>; // Specific to each type
   generatedAt: Date;
 }
 
@@ -28,9 +28,9 @@ interface NameState {
   preferences: UserPreferences;
   recentParameters: {
     people?: PeopleParams;
-    places?: any;
-    events?: any;
-    titles?: any;
+    places?: Record<string, unknown>;
+    events?: Record<string, unknown>;
+    titles?: Record<string, unknown>;
   };
 }
 
@@ -38,23 +38,23 @@ interface NameActions {
   // Name generation results
   addGeneratedNames: (names: GeneratedName[]) => void;
   clearGeneratedNames: () => void;
-  
+
   // Favorites
   addToFavorites: (nameId: string) => void;
   removeFromFavorites: (nameId: string) => void;
   clearFavorites: () => void;
-  
+
   // History
   clearHistory: () => void;
-  
+
   // Preferences
   updatePreferences: (preferences: Partial<UserPreferences>) => void;
   resetPreferences: () => void;
-  
+
   // Parameters
-  saveParameters: (type: string, params: any) => void;
-  getLastParameters: (type: string) => any;
-  
+  saveParameters: (type: string, params: Record<string, unknown>) => void;
+  getLastParameters: (type: string) => Record<string, unknown> | null;
+
   // Utility
   findNameById: (id: string) => GeneratedName | undefined;
   getNamesByType: (type: string) => GeneratedName[];
@@ -135,14 +135,16 @@ export const useNameStore = create<NameStore>()(
         })),
 
       getLastParameters: (type) => {
-        return get().recentParameters[type as keyof typeof get().recentParameters] || null;
+        const state = get();
+        const key = type as keyof NameState['recentParameters'];
+        return state.recentParameters[key] || null;
       },
 
       // Utility
       findNameById: (id) => {
         const state = get();
-        return state.history.find(name => name.id === id) || 
-               state.generatedNames.find(name => name.id === id);
+        return state.history.find(name => name.id === id) ||
+          state.generatedNames.find(name => name.id === id);
       },
 
       getNamesByType: (type) => {
@@ -190,25 +192,25 @@ export const createPersonName = (result: PersonNameResult): GeneratedName => ({
   generatedAt: new Date(),
 });
 
-export const createPlaceName = (result: any): GeneratedName => ({
+export const createPlaceName = (result: Record<string, unknown>): GeneratedName => ({
   id: generateId(),
-  name: result.name,
+  name: result.name as string,
   type: 'place',
   details: result,
   generatedAt: new Date(),
 });
 
-export const createEventName = (result: any): GeneratedName => ({
+export const createEventName = (result: Record<string, unknown>): GeneratedName => ({
   id: generateId(),
-  name: result.name,
+  name: result.name as string,
   type: 'event',
   details: result,
   generatedAt: new Date(),
 });
 
-export const createTitleName = (result: any): GeneratedName => ({
+export const createTitleName = (result: Record<string, unknown>): GeneratedName => ({
   id: generateId(),
-  name: result.name,
+  name: result.name as string,
   type: 'title',
   details: result,
   generatedAt: new Date(),

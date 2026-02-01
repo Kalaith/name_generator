@@ -13,7 +13,7 @@ const TitlesGeneratorPage: React.FC = () => {
     try {
       const results = await fetchTitleNames(params);
       setTitlesResults(results);
-    } catch (e) {
+    } catch {
       setTitlesResults([]);
     } finally {
       setTitlesLoading(false);
@@ -32,7 +32,7 @@ const TitlesGeneratorPage: React.FC = () => {
           </p>
         </div>
       </div>
-      
+
       <TitlesForm onGenerate={handleTitlesGenerate} loading={titlesLoading} />
       <ResultsGrid results={titlesResults} type="titles" />
     </div>
