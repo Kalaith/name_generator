@@ -3,3 +3,4 @@ mcp
 .env
 frontend/build_output.txt
 frontend/lint_output.txt
+frontend/test_output.txt

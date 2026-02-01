@@ -52,8 +52,8 @@ interface NameActions {
   resetPreferences: () => void;
 
   // Parameters
-  saveParameters: (type: string, params: Record<string, unknown>) => void;
-  getLastParameters: (type: string) => Record<string, unknown> | null;
+  saveParameters: (type: string, params: PeopleParams | Record<string, unknown>) => void;
+  getLastParameters: (type: string) => PeopleParams | Record<string, unknown> | null;
 
   // Utility
   findNameById: (id: string) => GeneratedName | undefined;
